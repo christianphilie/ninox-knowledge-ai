@@ -1,6 +1,6 @@
 # Ninox Knowledge Base für Cursor
 
-Knowledge Base für **[Cursor](https://cursor.sh)**, die mittels RAG sicherstellt, dass mit Cursor generierte Ninox-Skripte nur dokumentierte Funktionen verwenden und keine erfundenen Features enthalten.
+Knowledge Base für **[Cursor](https://cursor.sh)**, die mittels RAG sicherstellt, dass mit Cursor generierte **[Ninox](https://ninox.com)**-Skripte nur dokumentierte Funktionen verwenden und keine erfundenen Features enthalten.
 
 **Problem**: LLMs erfinden oft Funktionen oder übernehmen Syntax aus anderen Sprachen.  
 **Lösung**: Diese Knowledge Base nutzt **RAG (Retrieval-Augmented Generation)** - Regeln werden als Kontext eingebunden, nicht ins Modell trainiert. Sofort einsatzbereit, aktualisierbar, transparent.
