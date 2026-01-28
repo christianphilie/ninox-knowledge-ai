@@ -10,7 +10,9 @@ Eine universelle Knowledge Base für KI-Codierungs-Assistenten (**[Cursor](https
 ## 🚀 Schnellstart
 
 1.  **Repository klonen** oder herunterladen.
-2.  **In Cursor oder Google Antigravity öffnen**: Die Regeln in `.cursor/rules/` bzw. Skills in `.agent/skills/` werden automatisch erkannt.
+2.  **In Cursor oder Google Antigravity öffnen**: 
+    - **Cursor**: Regeln in `.cursor/rules/` und Skills in `.cursor/skills/` werden automatisch erkannt
+    - **Google Antigravity**: Skills in `.agent/skills/` werden automatisch erkannt
 3.  **Skripte erstellen**: Erstelle deine `.ninox` Dateien im Ordner `workspace/`.
 
 ## 📊 Vergleich der KI-Assistenten
@@ -47,7 +49,9 @@ cd ninox-knowledge-ai
 
 1.  **Cursor öffnen** (falls noch nicht installiert: von [cursor.sh](https://cursor.sh) herunterladen)
 2.  **Projekt öffnen**: `File` → `Open Folder` → Wähle den `ninox-knowledge-ai` Ordner
-3.  **Fertig**: Cursor liest automatisch alle `.mdc` Dateien im Ordner `.cursor/rules/`. Die "Leitplanken" sind sofort aktiv.
+3.  **Fertig**: 
+    - Cursor liest automatisch alle `.mdc` Dateien im Ordner `.cursor/rules/`. Die "Leitplanken" sind sofort aktiv.
+    - Das Ninox-Scripting Skill in `.cursor/skills/` ist verfügbar und kann mit `@ninox-scripting` aufgerufen werden.
 4.  **KI-Assistenten nutzen**: Öffne die Chat-Funktion in Cursor (Cmd/Ctrl + L) und stelle Fragen zu Ninox-Skripten.
 
 #### Für Google Antigravity
@@ -65,7 +69,8 @@ ChatGPT Custom GPTs funktionieren anders als Cursor oder Antigravity - sie müss
 ## 📁 Projekt-Struktur
 
 - `rules/` - Die Kern-Regeln (Whitelist, Verbotene Patterns, Performance)
-- `.cursor/rules/` - Spezielle Konfiguration für den Cursor Editor
+- `.cursor/rules/` - Spezielle Konfiguration für den Cursor Editor (Rules)
+- `.cursor/skills/` - Cursor Skills (z.B. `@ninox-scripting` für Ninox-Expertise)
 - `.agent/` - Spezielle Konfiguration für Google Antigravity (Skills & Workflows)
 - `.custom-gpt/` - Anleitungen und Texte für ChatGPT (Custom GPT)
 - `docs/` - Tiefergehende Dokumentation zu Scripting und Automatisierung
