@@ -17,7 +17,7 @@ Diese Features sind **nicht** in der offiziellen Dokumentation beschrieben, funk
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let records := select Tabelle[ Feld = "Wert" ];
 ```
 
@@ -31,20 +31,59 @@ let records := select Tabelle[ Feld = "Wert" ];
 
 ---
 
+### 1a. Eckige Klammern `[]` als Filter direkt auf Relationen
+
+**Beschreibung**: Relationen können direkt mit eckigen Klammern `[]` gefiltert werden, ohne `select` zu verwenden.
+
+**Syntax**:
+```ninox
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+Relation[ Feld = Wert ]
+```
+
+**Beispiel**:
+```ninox
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+let my := this;
+let gefilterteLagerbuchungen := my.Produkt.Lagerbuchungen[Lager = my.'von Quell-Lager'];
+let ersteBuchung := first(gefilterteLagerbuchungen);
+```
+
+**Erklärung**:
+- `my.Produkt.Lagerbuchungen` ist eine Relation (1:N Beziehung)
+- `[Lager = my.'von Quell-Lager']` filtert die Relation direkt
+- Das Ergebnis kann mit `first()`, `last()`, `count()` etc. weiterverarbeitet werden
+- Direkter Feldzugriff möglich: `first(Relation[Filter]).Feld`
+
+**Hinweise**:
+- Funktioniert direkt auf Relationen, nicht nur nach `select`
+- Sehr kompakt und effizient
+- Kann mit `first()`, `last()`, `count()` kombiniert werden
+- Performance kann bei sehr großen Relationen beeinträchtigt sein
+
+**Unterschied zu `select Table[Filter]`**:
+- `select Table[Filter]` funktioniert auf Tabellen
+- `Relation[Filter]` funktioniert direkt auf Relationen (ohne `select`)
+- Beide verwenden die gleiche `[]`-Syntax
+
+**Quelle**: Getestet und funktionierend, aber nicht in offizieller Dokumentation gefunden
+
+---
+
 ### 2. Verschachtelte `count()` mit `[]`-Filter in `where`-Klauseln
 
 **Beschreibung**: In `where`-Klauseln kann `count()` mit eckigen Klammern `[]` verwendet werden, um Relation-Felder zu filtern und zu zählen.
 
 **Syntax**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 select 'Tabelle' where count(RelationFeld[Bedingung]) >= Anzahl
 ```
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
-// Findet alle Aufträge mit mindestens 5 nicht abgerechneten Serviceberichten
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+"Findet alle Aufträge mit mindestens 5 nicht abgerechneten Serviceberichten";
 select 'Aufträge' where count(Servicebericht[Abgerechnet = false]) >= 5
 ```
 
@@ -70,9 +109,9 @@ select 'Aufträge' where count(Servicebericht[Abgerechnet = false]) >= 5
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let anzahl := cnt(select Bestellungen);
-// Identisch zu: count(select Bestellungen)
+"Identisch zu: count(select Bestellungen)";
 ```
 
 **Hinweise**:
@@ -90,16 +129,16 @@ let anzahl := cnt(select Bestellungen);
 
 **Syntax**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 for i from start to end do
-  // Code
+  "Code";
 end
 ```
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
-// Iteriert von 7 bis 18 (inklusive)
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+"Iteriert von 7 bis 18 (inklusive)";
 for hour from 7 to 18 do
   alert("Stunde: " + hour);
 end
@@ -120,15 +159,18 @@ end
 
 **Syntax**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
-start(datetime)  // Startzeitpunkt
-endof(datetime) // Endzeitpunkt
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+start(datetime);
+"Startzeitpunkt";
+endof(datetime);
+"Endzeitpunkt";
 ```
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
-let termin := item.Termin; // Datetime-Zeitraum
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+let termin := item.Termin;
+"Datetime-Zeitraum";
 let startZeit := start(termin);
 let endZeit := endof(termin);
 let dauer := endZeit - startZeit;
@@ -150,16 +192,16 @@ let dauer := endZeit - startZeit;
 
 **Syntax**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 extractx(text, pattern, replacement)
 ```
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let layoutInfo := ";123:45,60;";
 let layoutStr := extractx(layoutInfo, ";" + text(123) + ":(.+?);", "$1");
-// Ergebnis: "45,60"
+"Ergebnis: '45,60'";
 ```
 
 **Hinweise**:
@@ -177,13 +219,13 @@ let layoutStr := extractx(layoutInfo, ";" + text(123) + ":(.+?);", "$1");
 
 **Syntax**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 popupRecord(record)
 ```
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let newRecord := create 'Kunden / Kontakte';
 popupRecord(newRecord);
 ```
@@ -203,13 +245,13 @@ popupRecord(newRecord);
 
 **Syntax**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 html(htmlCode)
 ```
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 html("<div style='color: red;'>Hallo Welt</div>");
 ```
 
@@ -228,15 +270,15 @@ html("<div style='color: red;'>Hallo Welt</div>");
 
 **Syntax**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 color(field)
 ```
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let farbe := color(item.Terminart);
-// Gibt z.B. "blue" oder "#ff0000" zurück
+"Gibt z.B. 'blue' oder '#ff0000' zurück";
 ```
 
 **Hinweise**:
@@ -254,15 +296,15 @@ let farbe := color(item.Terminart);
 
 **Syntax**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 formatXML(data, pretty)
 ```
 
 **Beispiel**:
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let xml := formatXML(data, true);
-// Formatiert Daten als XML mit Einrückung (pretty = true)
+"Formatiert Daten als XML mit Einrückung (pretty = true)";
 ```
 
 **Hinweise**:
