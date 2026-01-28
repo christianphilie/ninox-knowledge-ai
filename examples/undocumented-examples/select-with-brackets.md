@@ -4,8 +4,8 @@
 
 ### Select mit []-Filter
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
-// Alternative zu: select Orders where Status = "Open"
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+"Alternative zu: select Orders where Status = 'Open'";
 let openOrders := select Orders[Status = "Open"];
 ```
 
@@ -21,7 +21,7 @@ let openOrders := select Orders[Status = "Open"];
 
 ### Kombination mit anderen Operationen
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
 let filteredOrders := select Orders[Status = "Open"][Amount > 100];
 ```
 
@@ -35,13 +35,13 @@ let filteredOrders := select Orders[Status = "Open"][Amount > 100];
 
 ### Mit Where (bevorzugt)
 ```ninox
-// ✅ BEVORZUGT: Filtert bereits bei Selektion
+"✅ BEVORZUGT: Filtert bereits bei Selektion";
 let orders := select Orders where Status = "Open";
 ```
 
 ### Mit Eckigen Klammern
 ```ninox
-// ⚠️ Funktioniert, aber weniger performant
+"⚠️ Funktioniert, aber weniger performant";
 let orders := select Orders[Status = "Open"];
 ```
 

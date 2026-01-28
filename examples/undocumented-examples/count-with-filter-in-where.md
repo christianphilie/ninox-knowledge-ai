@@ -5,8 +5,8 @@
 ### Verschachtelte count() mit []-Filter
 
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
-// Findet alle Aufträge mit mindestens 5 nicht abgerechneten Serviceberichten
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+"Findet alle Aufträge mit mindestens 5 nicht abgerechneten Serviceberichten";
 select 'Aufträge' where count(Servicebericht[Abgerechnet = false]) >= 5
 ```
 
@@ -31,15 +31,15 @@ select 'Aufträge' where count(Servicebericht[Abgerechnet = false]) >= 5
 
 ### Mit Gleichheitsprüfung
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
-// Findet Kunden mit genau 3 Bestellungen
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+"Findet Kunden mit genau 3 Bestellungen";
 select 'Kunden' where count(Bestellung) = 3
 ```
 
 ### Mit mehreren Bedingungen
 ```ninox
-// ⚠️ Nicht in offizieller Dokumentation, aber funktioniert
-// Findet Aufträge mit mindestens 10 offenen Positionen
+"⚠️ Nicht in offizieller Dokumentation, aber funktioniert";
+"Findet Aufträge mit mindestens 10 offenen Positionen";
 select 'Aufträge' where count(Position[Status = "Offen"]) >= 10
 ```
 

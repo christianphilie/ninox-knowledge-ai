@@ -4,8 +4,8 @@
 
 ### Select mit Where (bevorzugt)
 ```ninox
-// Dokumentiert: Select mit Where-Klausel
-// Quelle: https://ninox.com/de/tutorials/advanced-tutorial-2
+"Dokumentiert: Select mit Where-Klausel";
+"Quelle: https://ninox.com/de/tutorials/advanced-tutorial-2";
 let openOrders := select Orders where Status = "Open";
 ```
 
@@ -20,13 +20,13 @@ let openOrders := select Orders where Status = "Open";
 
 ### ✅ BEVORZUGT: Select mit Where
 ```ninox
-// Gut: Filtert bereits bei Selektion (serverseitig)
+"Gut: Filtert bereits bei Selektion (serverseitig)";
 let orders := select Orders where Status = "Open";
 ```
 
 ### ❌ VERMEIDEN: Nachträgliche Filterung
 ```ninox
-// Schlecht: Holt alle Datensätze, dann Filterung (clientseitig)
+"Schlecht: Holt alle Datensätze, dann Filterung (clientseitig)";
 let allOrders := select Orders;
 let filtered := allOrders[Status = "Open"];
 ```

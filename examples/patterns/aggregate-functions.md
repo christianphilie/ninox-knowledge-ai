@@ -4,8 +4,8 @@
 
 ### Summe mit Aggregatfunktion
 ```ninox
-// Dokumentiert: Aggregatfunktion statt Loop
-// Quelle: Ninox Dokumentation - Funktionen
+"Dokumentiert: Aggregatfunktion statt Loop";
+"Quelle: Ninox Dokumentation - Funktionen";
 let totalAmount := sum(select Orders[Amount]);
 ```
 
@@ -20,7 +20,7 @@ let totalAmount := sum(select Orders[Amount]);
 
 ### ❌ SCHLECHT: Loop
 ```ninox
-// Schlecht: Summe in Loop berechnen
+"Schlecht: Summe in Loop berechnen";
 let total := 0;
 for order in select Orders do
   total := total + order.Amount;
@@ -29,7 +29,7 @@ end
 
 ### ✅ GUT: Aggregatfunktion
 ```ninox
-// Gut: Aggregatfunktion verwenden
+"Gut: Aggregatfunktion verwenden";
 let total := sum(select Orders[Amount]);
 ```
 

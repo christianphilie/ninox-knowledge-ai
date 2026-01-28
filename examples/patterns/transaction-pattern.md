@@ -4,8 +4,8 @@
 
 ### Mehrere Schreiboperationen in Transaction
 ```ninox
-// Dokumentiert: Transaction Block für mehrere Schreiboperationen
-// Quelle: https://forum.ninox.de (Performance-Dokumentation)
+"Dokumentiert: Transaction Block für mehrere Schreiboperationen";
+"Quelle: https://forum.ninox.de (Performance-Dokumentation)";
 do as transaction
   let newOrder := create Orders;
   newOrder.Customer := customer;

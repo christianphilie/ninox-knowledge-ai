@@ -12,13 +12,13 @@ Diese Regeln beschreiben Performance-Optimierungen für Ninox-Skripte.
 
 ### ✅ RICHTIG
 ```ninox
-// Filtert bereits bei der Selektion (serverseitig)
+"Filtert bereits bei der Selektion (serverseitig)";
 select Orders where Status = "Open"
 ```
 
 ### ❌ FALSCH
 ```ninox
-// Holt alle Datensätze, dann Filterung (clientseitig)
+"Holt alle Datensätze, dann Filterung (clientseitig)";
 let orders := select Orders;
 let filtered := orders[Status = "Open"];
 ```
@@ -40,7 +40,7 @@ end
 
 ### ❌ FALSCH
 ```ninox
-// Jede Operation einzeln
+"Jede Operation einzeln";
 record1.field := value1;
 record2.field := value2;
 record3.field := value3;
@@ -54,7 +54,7 @@ record3.field := value3;
 
 ### ❌ FALSCH
 ```ninox
-// Select in jeder Iteration
+"Select in jeder Iteration";
 for customer in select Customers do
   let orders := select Orders where Customer = customer;
 end
@@ -62,7 +62,7 @@ end
 
 ### ✅ RICHTIG
 ```ninox
-// Select einmalig
+"Select einmalig";
 let allOrders := select Orders;
 for customer in select Customers do
   let orders := allOrders[Customer = customer];
@@ -77,7 +77,7 @@ end
 
 ### ❌ FALSCH
 ```ninox
-// Summe in Loop berechnen
+"Summe in Loop berechnen";
 let total := 0;
 for order in select Orders do
   total := total + order.Amount;
@@ -86,7 +86,7 @@ end
 
 ### ✅ RICHTIG
 ```ninox
-// Aggregatfunktion verwenden
+"Aggregatfunktion verwenden";
 let total := sum(select Orders[Amount]);
 ```
 
@@ -98,13 +98,13 @@ let total := sum(select Orders[Amount]);
 
 ### ✅ RICHTIG
 ```ninox
-// Nur benötigte Datensätze laden
+"Nur benötigte Datensätze laden";
 select Orders order by Date desc limit 10
 ```
 
 ### ❌ FALSCH
 ```ninox
-// Alle Datensätze laden
+"Alle Datensätze laden";
 select Orders order by Date desc
 ```
 
@@ -116,7 +116,7 @@ select Orders order by Date desc
 **Verwendung**: Bei mehreren Schreiboperationen
 ```ninox
 do as transaction
-  // Mehrere Schreiboperationen
+  "Mehrere Schreiboperationen";
 end
 ```
 
@@ -124,7 +124,7 @@ end
 **Verwendung**: Code auf Server-Seite ausführen
 ```ninox
 do as server
-  // Server-seitige Ausführung
+  "Server-seitige Ausführung";
 end
 ```
 
@@ -132,7 +132,7 @@ end
 **Verwendung**: Verzögerte Ausführung
 ```ninox
 do as deferred
-  // Verzögerte Ausführung
+  "Verzögerte Ausführung";
 end
 ```
 

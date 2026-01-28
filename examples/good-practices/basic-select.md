@@ -4,8 +4,8 @@
 
 ### Select mit Where
 ```ninox
-// Dokumentiert: Select mit Where-Klausel
-// Quelle: https://ninox.com/de/tutorials/advanced-tutorial-2
+"Dokumentiert: Select mit Where-Klausel";
+"Quelle: https://ninox.com/de/tutorials/advanced-tutorial-2";
 let openOrders := select Orders where Status = "Open";
 ```
 
@@ -18,8 +18,8 @@ let openOrders := select Orders where Status = "Open";
 
 ### Select mit Order By
 ```ninox
-// Dokumentiert: Select mit Sortierung
-// Quelle: https://ninox.com/de/tutorials/advanced-tutorial-2
+"Dokumentiert: Select mit Sortierung";
+"Quelle: https://ninox.com/de/tutorials/advanced-tutorial-2";
 let recentOrders := select Orders order by Date desc limit 10;
 ```
 
@@ -32,8 +32,8 @@ let recentOrders := select Orders order by Date desc limit 10;
 
 ### Aggregatfunktionen
 ```ninox
-// Dokumentiert: Aggregatfunktionen
-// Quelle: Ninox Dokumentation - Funktionen
+"Dokumentiert: Aggregatfunktionen";
+"Quelle: Ninox Dokumentation - Funktionen";
 let totalAmount := sum(select Orders[Amount]);
 let orderCount := count(select Orders);
 let averageAmount := average(select Orders[Amount]);
@@ -49,8 +49,8 @@ let averageAmount := average(select Orders[Amount]);
 
 ### Transaction Block
 ```ninox
-// Dokumentiert: Transaction Block für mehrere Schreiboperationen
-// Quelle: https://forum.ninox.de (Performance-Dokumentation)
+"Dokumentiert: Transaction Block für mehrere Schreiboperationen";
+"Quelle: https://forum.ninox.de (Performance-Dokumentation)";
 do as transaction
   let newOrder := create Orders;
   newOrder.Customer := customer;
