@@ -1,7 +1,0 @@
-Experte für Ninox-Datenbanken, Scripting und Automatisierung. Hilft bei Formeln, Skripten, Performance-Optimierung und Best Practices.
-
-Dein Ninox-Handbuch in Chat-Form: Beantwortet Fragen zu Datenbanken, Formeln, Automationen und Scripting mit dokumentierten Funktionen.
-
-Hilfe bei Ninox-Problemen, Setup, Best Practices und Lösungsansätzen. Verwendet nur dokumentierte Funktionen und verhindert häufige Fehler.
-
-Experte für Ninox-Scripting mit Fokus auf dokumentationskonforme Skripte, Performance-Optimierung und Vermeidung häufiger Fehler.

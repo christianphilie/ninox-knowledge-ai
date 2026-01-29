@@ -1,92 +1,102 @@
-# Ninox AI Knowledge Base
+# Ninox Scripting Agent Skill
 
-Eine universelle Knowledge Base für KI-Codierungs-Assistenten (**[Cursor](https://cursor.sh)**, **[Google Antigravity](https://antigravity.dev)**, etc.), die mittels RAG sicherstellt, dass generierte **[Ninox](https://ninox.com)**-Skripte nur dokumentierte Funktionen verwenden.
+Ein [Agent Skill](https://agentskills.io) für KI-Codierungs-Assistenten (**[Cursor](https://cursor.sh)**, **[Claude Desktop](https://claude.ai/download)**), der sicherstellt, dass generierte **[Ninox](https://ninox.com)**-Skripte nur dokumentierte Funktionen verwenden.
 
 **⚠️ Problem**: KI-Modelle erfinden oft Funktionen oder übernehmen Syntax aus anderen Sprachen (wie JavaScript-Array-Methoden), die Ninox nicht unterstützt.
 
-**✅ Lösung**: Diese Knowledge Base nutzt **RAG (Retrieval-Augmented Generation)**. Die Regeln werden als Kontext eingebunden, sodass die KI genau weiß, was in Ninox erlaubt ist und was nicht.
-
+**✅ Lösung**: Dieser Skill folgt dem [Agent Skills Standard](https://agentskills.io/specification) und nutzt **Progressive Disclosure**. Die Regeln werden als Kontext eingebunden, sodass die KI genau weiß, was in Ninox erlaubt ist und was nicht.
 
 ## 🚀 Schnellstart
 
-1.  **Repository klonen** oder herunterladen.
-2.  **In Cursor oder Google Antigravity öffnen**: 
-    - **Cursor**: Regeln in `.cursor/rules/` und Skills in `.cursor/skills/` werden automatisch erkannt
-    - **Google Antigravity**: Skills in `.agent/skills/` werden automatisch erkannt
-3.  **Skripte erstellen**: Erstelle deine `.ninox` Dateien im Ordner `workspace/`.
+### Als Skill installieren in **Cursor** (empfohlen)
 
-## 📊 Vergleich der KI-Assistenten
+**⚠️ Wichtig**: Der Skill wird nur für das aktuelle Projekt verfügbar sein. Für beste Ergebnisse solltest du ein Ninox-Workspace-Projekt in Cursor öffnen, bevor du den Skill installierst.
 
-| KI-Assistent | Bewertung | Kosten | Regelbefolgung | Empfehlung |
-|--------------|-----------|--------|----------------|------------|
-| **Cursor** | ⭐⭐⭐⭐⭐ | Kostenpflichtig | Sehr gut | ✅ **Empfohlen** |
-| **Google Antigravity** | ⭐⭐⭐⭐ | Teilweise kostenlos | Gut | ✅ Gute Alternative |
-| **ChatGPT Custom GPT** | ⭐⭐⭐ | Kostenpflichtig | Schwächer | ⚠️ Funktioniert, aber weniger zuverlässig |
+1. **Cursor öffnen** und deinen Ninox-Workspace öffnen
+2. **Zu "Rules, Skills, Subagents" navigieren**: `Cmd+Shift+J` (Mac) oder `Ctrl+Shift+J` (Windows/Linux)
+3. **Neben "Rules" auf "New" klicken** und **"Add from GitHub" auswählen**
+4. **GitHub Repository URL eingeben**: `https://github.com/christianphilie/ninox-agent-skill.git` (inkl. `.git` am Ende)
+5. **Fertig**: Der Skill wird automatisch installiert und ist sofort für dieses Projekt verfügbar
 
-## 📖 Detaillierte Einrichtungsanleitung
+Der Skill wird automatisch erkannt, wenn du Fragen zu Ninox-Skripten stellst.
 
-### 1. Vorbereitung: Terminal öffnen und Ordner wählen
 
-1.  **Terminal öffnen** (macOS: Terminal.app, Windows: PowerShell oder Git Bash, Linux: Terminal)
-2.  **Zum gewünschten Ordner navigieren**, in dem du das Projekt speichern möchtest:
-    ```bash
-    cd ~/Sites
-    # oder
-    cd ~/Documents
-    ```
+## 📊 Unterstützte KI-Assistenten
 
-### 2. Installation: Repository klonen
-
-Klone das Repository in den aktuellen Ordner und wechsle danach in den neuen Ordner:
-```bash
-git clone https://github.com/christianphilie/ninox-knowledge-ai.git
-cd ninox-knowledge-ai
-```
-
-### 3. Projekt in deinem KI-Assistenten öffnen
-
-#### Für Cursor
-
-1.  **Cursor öffnen** (falls noch nicht installiert: von [cursor.sh](https://cursor.sh) herunterladen)
-2.  **Projekt öffnen**: `File` → `Open Folder` → Wähle den `ninox-knowledge-ai` Ordner
-3.  **Fertig**: 
-    - Cursor liest automatisch alle `.mdc` Dateien im Ordner `.cursor/rules/`. Die "Leitplanken" sind sofort aktiv.
-    - Das Ninox-Scripting Skill in `.cursor/skills/` ist verfügbar und kann mit `@ninox-scripting` aufgerufen werden.
-4.  **KI-Assistenten nutzen**: Öffne die Chat-Funktion in Cursor (Cmd/Ctrl + L) und stelle Fragen zu Ninox-Skripten.
-
-#### Für Google Antigravity
-
-1.  **Google Antigravity öffnen** (falls noch nicht installiert: von [antigravity.dev](https://antigravity.dev) herunterladen)
-2.  **Projekt öffnen**: `File` → `Open Folder` → Wähle den `ninox-knowledge-ai` Ordner
-3.  **Fertig**: Antigravity erkennt automatisch den `.agent/`-Ordner. Die Skills werden automatisch geladen.
-4.  **KI-Assistenten nutzen**: Die Ninox-Scripting Skills sind automatisch verfügbar, wenn du Fragen zu Ninox stellst.
-
-## 🤖 Konfiguration für ChatGPT (Custom GPT)
-
-ChatGPT Custom GPTs funktionieren anders als Cursor oder Antigravity - sie müssen direkt in ChatGPT eingerichtet werden. Eine detaillierte Schritt-für-Schritt-Anleitung findest du in [`.custom-gpt/README.md`](.custom-gpt/README.md).
-
+| KI-Assistent | Unterstützung | Installation |
+|--------------|---------------|--------------|
+| **Cursor** | ✅ Vollständig | GitHub-Installation oder Repository klonen |
+| **Claude Desktop** | ✅ Vollständig | Repository klonen (erkennt Skills automatisch) |
+| **Alle Agent Skills-kompatiblen Tools** | ✅ Vollständig | Standard-konform |
 
 ## 📁 Projekt-Struktur
 
-- `rules/` - Die Kern-Regeln (Whitelist, Verbotene Patterns, Performance)
-- `.cursor/rules/` - Spezielle Konfiguration für den Cursor Editor (Rules)
-- `.cursor/skills/` - Cursor Skills (z.B. `@ninox-scripting` für Ninox-Expertise)
-- `.agent/` - Spezielle Konfiguration für Google Antigravity (Skills & Workflows)
-- `.custom-gpt/` - Anleitungen und Texte für ChatGPT (Custom GPT)
-- `docs/` - Tiefergehende Dokumentation zu Scripting und Automatisierung
-- `examples/` - Best-Practice Beispiele für Ninox-Skripte
-- `workspace/` - Dein Arbeitsbereich für neue Skripte
+Dieses Repository enthält einen [Agent Skill](https://agentskills.io/specification) im Verzeichnis `ninox-scripting/`. Die Struktur entspricht exakt dem [Agent Skills Standard](https://agentskills.io/specification):
 
+```
+ninox-scripting/                # Skill-Verzeichnis (entspricht Agent Skills Standard)
+├── SKILL.md                    # Skill-Definition mit YAML Frontmatter (erforderlich)
+└── references/                 # Optionale Referenzdateien (progressive disclosure)
+    ├── function-whitelist.md   # Alle dokumentierten Ninox-Funktionen
+    ├── forbidden-patterns.md   # Häufige Fehler, die vermieden werden müssen
+    ├── common-mistakes.md      # Best Practices und häufige Fehlerquellen
+    ├── context-queries.md      # Wann nachfragen statt raten
+    ├── relations-and-loops.md  # Korrekte Verwendung von Relationen und for-Schleifen
+    ├── performance-rules.md    # Optimierungsrichtlinien
+    ├── undocumented-features.md # Funktionierende aber undokumentierte Features
+    ├── strict-rules.md         # Kritische Dokumentationskonformitäts-Regeln
+    ├── style-guide.md          # Coding-Standards
+    ├── functions.md            # Alle dokumentierten Ninox-Funktionen (Referenz)
+    ├── performance-guide.md    # Performance-Optimierungen
+    ├── api.md                  # HTTP und REST API
+    ├── tables.md               # Datenbank-Tabellen-Konzepte
+    └── example-*.md            # Best-Practice Beispiele und Patterns
+```
+
+**Hinweis**: Der Skill ist vollständig portabel und kann direkt von GitHub installiert werden. Alle Referenzen sind im `references/` Ordner enthalten, um progressive disclosure zu ermöglichen (Agent Skills Standard).
 
 ## ✅ Die Goldenen Regeln
 
 Jedes von der KI generierte Ninox-Skript muss:
-1.  Nur Funktionen aus der `rules/function-whitelist.md` verwenden.
-2.  Keine Muster aus `rules/forbidden-patterns.md` enthalten (z.B. kein `.map()`).
-3.  Saubere Syntax gemäß `rules/style-guide.md` einhalten.
+1. Nur dokumentierte Funktionen verwenden (siehe `references/function-whitelist.md`)
+2. Keine Muster aus `references/forbidden-patterns.md` enthalten (z.B. kein `.map()`)
+3. Saubere Syntax gemäß `references/style-guide.md` einhalten
 
+## 🔧 Wie der Skill funktioniert
+
+Der Skill nutzt **Progressive Disclosure** gemäß dem Agent Skills Standard:
+
+1. **Discovery**: Beim Start lädt der Agent nur Name und Beschreibung des Skills
+2. **Activation**: Bei relevanten Aufgaben wird die vollständige `SKILL.md` geladen
+3. **Execution**: Referenzdateien aus `references/` werden bei Bedarf nachgeladen
+
+Der Skill enthält:
+- **Function Whitelist**: Alle dokumentierten Ninox-Funktionen
+- **Forbidden Patterns**: Häufige Fehler, die vermieden werden müssen
+- **Common Mistakes**: Best Practices und häufige Fehlerquellen
+- **Performance Rules**: Optimierungsrichtlinien
+- **Undocumented Features**: Funktionierende aber undokumentierte Features (mit Kennzeichnung)
+- **Style Guide**: Coding-Standards
+- **Context Queries**: Wann nachfragen statt raten
+- **Relations and Loops**: Korrekte Verwendung von Relationen und for-Schleifen
+
+Alle Referenzen sind im `references/` Ordner des Skills enthalten, sodass der Skill vollständig portabel ist und über GitHub installiert werden kann.
+
+## 📚 Agent Skills Standard
+
+Dieses Repository folgt exakt dem offenen [Agent Skills Standard](https://agentskills.io/specification), der von [Anthropic](https://www.anthropic.com/) entwickelt und als offener Standard veröffentlicht wurde. Der Standard wird von führenden AI-Entwicklungstools unterstützt, einschließlich Cursor und Claude Desktop.
+
+**Struktur-Konformität:**
+- ✅ Skill-Verzeichnis `ninox-scripting/` mit erforderlicher `SKILL.md`
+- ✅ YAML Frontmatter mit `name`, `description`, `license`, `metadata`
+- ✅ Optionale `references/` Verzeichnis für progressive disclosure
+- ✅ Relative Pfade zu Referenzdateien in `SKILL.md`
+- ✅ Skill-Dokumentation unter 500 Zeilen (Hauptanweisungen in `SKILL.md`, Details in `references/`)
 
 ## ⚖️ Lizenz
-Creative Commons Attribution 4.0 International (CC-BY 4.0).
-Ninox ist eine Marke der Ninox Software GmbH. Diese Knowledge Base ist ein Community-Projekt.
 
+Creative Commons Attribution 4.0 International (CC-BY 4.0).
+
+Siehe [LICENSE](LICENSE) für vollständige Lizenzbedingungen.
+
+Ninox ist eine Marke der Ninox Software GmbH. Dieser Agent Skill ist ein Community-Projekt und wird nicht offiziell von Ninox Software GmbH unterstützt.

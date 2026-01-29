@@ -12,6 +12,3 @@ Thumbs.db
 # Temporary Files
 *.tmp
 *.log
-
-# Workspace Files (optional - remove if you want to commit workspace files)
-workspace/*.ninox
