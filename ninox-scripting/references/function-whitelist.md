@@ -75,55 +75,94 @@ This list contains all **documented** Ninox functions that can be safely used. T
 
 ## String Functions
 
-- `concat(string1, string2, ...)` - Concatenate strings
-- `contains(text, search)` - Contains text
-- `startsWith(text, prefix)` - Starts with
-- `endsWith(text, suffix)` - Ends with
-- `length(text)` - Text length
-- `upper(text)` - Uppercase
-- `lower(text)` - Lowercase
-- `trim(text)` - Remove whitespace (if documented)
-- `split(text, delimiter)` - Split text at delimiter
-- `substr(text, start, length)` - Extract substring
-- `index(text, search)` - Find position of text
-- `replace(text, search, replacement)` - Replace text
-- `join(collection, separator)` - Join collection with separator
+- `concat(collection)` - Concatenate all items in a collection into one string
+- `contains(text, search)` - Returns boolean: true if text contains search (case-sensitive)
+- `contains(collection, value)` - Returns boolean: true if collection contains value
+- `startsWith(text, prefix)` - Returns boolean: true if text starts with prefix
+- `endsWith(text, suffix)` - Returns boolean: true if text ends with suffix
+- `length(text)` - Text length as number; also works on arrays: `length([a,b,c])` = 3
+- `upper(text)` - Convert to uppercase
+- `lower(text)` - Convert to lowercase
+- `trim(text)` - Remove leading and trailing whitespace ✅ confirmed documented
+- `split(text, delimiter)` - Split text at delimiter, returns collection of text
+- `splitx(text, regex)` - Split using regular expression
+- `substr(text, start)` - Extract from start to end (0-indexed)
+- `substr(text, start, length)` - Extract substring (0-indexed start, length characters)
+- `substring(text, start, end)` - Extract by start and end position (not length)
+- `index(text, search)` - Find position of search in text (0-indexed), -1 if not found
+- `index(collection, value)` - Find position of value in collection
+- `replace(text, search, replacement)` - Replace ALL occurrences (case-sensitive)
+- `replacex(text, regex, replacement)` - Replace using regular expression
+- `extractx(text, regex)` - Extract substring using regular expression
+- `testx(text, regex)` - Returns boolean if text matches regular expression
+- `join(collection, separator)` - Join collection items with separator into text
+- `lpad(text, length, padding)` - Left-pad text to length with padding character
+- `rpad(text, length, padding)` - Right-pad text to length with padding character
+- `capitalize(text)` - Capitalize first letter of each word
+- `html(value)` - Returns rich text / HTML representation
+- `raw(value)` - Returns raw internal text representation
+- `chosen(value, selection)` - Returns boolean if value equals selection
 
-**Source**: Ninox Documentation - Functions
+**String concatenation**: The `+` operator concatenates strings. Always use `text()` to convert non-strings: `"Name: " + text(42)`
+
+**Source**: Ninox Documentation - Functions, https://docs.ninox.com/en/script/text-functions
 
 ---
 
 ## Date and Time Functions
 
-- `today()` - Today's date
-- `now()` - Current timestamp
-- `date(year, month, day)` - Create date
-- `time(hour, minute, second)` - Create time
+- `today()` - Today's date (type: date)
+- `now()` - Current date+time (type: timestamp/datetime)
+- `date(year, month, day)` - Create date from components
+- `date(value)` - Extract date from datetime/timestamp
+- `date(milliseconds)` - Convert Unix milliseconds to date
+- `time(hour, minute)` - Create time
+- `time(hour, minute, second)` - Create time with seconds
+- `time(hour, minute, second, millisecond)` - Full time precision
+- `time(value)` - Extract time component from datetime
 - `datetime(date, time)` - Combine date and time
-- `year(date)` - Extract year
-- `month(date)` - Extract month
-- `day(date)` - Extract day
-- `weekday(date)` - Day of week
-- `week(date)` - Calendar week
-- `quarter(date)` - Quarter
-- `format(date/datetime, formatString)` - Format date/time
+- `datetime(year, month, day)` - Create datetime
+- `datetime(year, month, day, hour, minute)` - Full datetime
+- `datetime(milliseconds)` - Convert Unix milliseconds to datetime
+- `year(date)` - Extract year (number)
+- `month(date)` - Extract month 1–12 (number)
+- `day(date)` - Extract day 1–31 (number)
+- `weekday(date)` - Day of week: **0=Monday, 6=Sunday**
+- `week(date)` - Calendar week 1–53 (number)
+- `quarter(date)` - Quarter 1–4 (number)
+- `age(date)` - Full years between date and today (e.g., `age(Birthday)`)
+- `workdays(date1, date2)` - Working days (Mon–Fri) between two dates
+- `start(appointment)` - Start datetime of appointment field
+- `endof(appointment)` - End datetime of appointment field
+- `format(date, formatString)` - Format date as text
+- `format(date, formatString, language)` - Format with locale (e.g., "de", "en")
+- `format(number, formatString)` - Format number as text
 
-**Source**: Ninox Documentation - Functions
+**⚠️ weekday() uses 0=Monday, 6=Sunday — NOT 1=Monday, 7=Sunday!**
+
+**Source**: Ninox Documentation - Functions, https://docs.ninox.com/en/script/dates-and-times
 
 ---
 
 ## Mathematical Functions
 
 - `abs(number)` - Absolute value
-- `round(number, decimals)` - Round (with optional decimal places)
-- `floor(number)` - Round down
-- `ceil(number)` - Round up
+- `round(number, decimals)` - Round (decimals is optional, rounds to integer if omitted)
+- `floor(number)` - Round down to nearest integer
+- `ceil(number)` - Round up to nearest integer
 - `sqrt(number)` - Square root
-- `pow(base, exponent)` - Power
-- `max(value1, value2, ...)` - Maximum
-- `min(value1, value2, ...)` - Minimum
+- `pow(base, exponent)` - Power (e.g., `pow(2, 10)` = 1024)
+- `max(value1, value2, ...)` - Maximum of multiple values
+- `min(value1, value2, ...)` - Minimum of multiple values
 
-**Source**: Ninox Documentation - Functions
+**Arithmetic Operators**:
+- `+` - Addition (also text concatenation)
+- `-` - Subtraction
+- `*` - Multiplication
+- `/` - Division
+- `mod` - Modulo (remainder), e.g., `7 mod 3` = 1
+
+**Source**: Ninox Documentation - Functions, https://docs.ninox.com/en/script/math-functions
 
 ---
 
@@ -173,26 +212,130 @@ This list contains all **documented** Ninox functions that can be safely used. T
 
 **Source**: https://forum.ninox.com/t/x2yz1t2/create-your-own-functions
 
-## Additional Functions
+## Type Conversion Functions
 
-- `unique(collection)` - Remove duplicates
-- `array(...)` - Create array
-- `text(value)` - Convert value to text
-- `number(value)` - Convert value to number
+- `text(value)` - Convert any value to text (also: `string(value)` is an alias)
+- `number(value)` - Convert value to number (also works on records: returns record ID)
 - `boolean(value)` - Convert value to boolean
+- `string(value)` - Alias for `text()`, converts to string
 
 **Source**: Ninox Documentation
 
 ---
 
-## HTTP Operations
+## Collection / Array Functions
 
-- `http(method, url, headers, body)` - Execute HTTP request
-  - Method: "GET", "POST", "PUT", "DELETE"
-  - Headers: Object with header key-value pairs
-  - Body: Request body (for POST/PUT)
+- `array(...)` - Create array/collection from values
+- `item(collection, index)` - Get element at index position (0-indexed); also `item(json, key)` for JSON
+- `unique(collection)` - Remove duplicates from collection ✅ confirmed documented
+- `sort(collection)` - Sort collection ascending ✅ confirmed documented
+- `rsort(collection)` - Sort collection descending ✅ confirmed documented
+- `range(start, end)` - Create numeric array [start, start+1, ..., end-1] (same as `for i from start to end`)
+- `slice(collection, start)` - Extract subrange from array or string
+- `slice(collection, start, end)` - Extract subrange with end position
+- `numbers(choiceField)` - Returns IDs of selected values in a multiple choice field
+- `files(record)` - Returns all file attachments of a record as array
 
-**Source**: Ninox API Documentation
+**Source**: Ninox Documentation, forum.ninox.com
+
+---
+
+## UI / Navigation Functions (Button Triggers Only)
+
+These functions are only available in button/click trigger contexts. They do NOT work in onChange, onSave, or formula fields.
+
+- `alert(message)` - Show a message popup to the user (only last call executes if called multiple times)
+- `dialog(title, message, [options])` - Show dialog with answer options, returns selected answer (text)
+- `openRecord(record)` - Navigate to and open a specific record
+- `openTable(tableName)` - Navigate to a table
+- `openTable(tableName, viewName)` - Navigate to a specific view of a table
+- `openURL(url)` - Open a URL in browser
+- `popupRecord(record)` - Open a record in a popup window
+- `popupRecord(record, tabName)` - Open record popup at specific tab
+- `printRecord(record)` - Print a record
+- `printTable(tableName)` - Print a table
+
+**Source**: Ninox Documentation
+
+---
+
+## User and Session Functions
+
+- `user()` - Returns the currently logged-in user
+- `user(name)` - Returns user by name (empty if not found)
+- `userId()` - Returns internal alphanumeric ID of current user
+- `userId(user)` - Returns ID of given user
+- `userName()` - Returns display name of current user (e.g., "Steve Rogers")
+- `userName(user)` - Returns name of given user
+- `userEmail()` - Returns email of current user
+- `userEmail(user)` - Returns email of given user
+- `userRole()` - Returns role of current user (e.g., "admin", "editor")
+- `userRole(user)` - Returns role of given user
+- `userRoles()` - Returns array of all roles of current user
+- `userRoles(user)` - Returns all roles of given user
+- `userHasRole(role)` - Returns true if current user has given role
+- `userHasRole(user, role)` - Returns true if given user has role
+- `users()` - Returns all users in the workspace
+- `clientLang()` - Returns current language code (e.g., "de", "en", "fr")
+
+**Source**: Ninox Documentation, https://docs.ninox.com/en/script/globals
+
+---
+
+## Global Context Functions
+
+- `teamId()` - Returns ID of current workspace/team
+- `databaseId()` - Returns ID of current database
+- `tableId(nid)` - Returns table ID (capital letter) from a record or table name
+- `tableId(string)` - Returns table ID by table name
+- `fieldId(field)` - Returns field ID (e.g., "A", "B")
+
+**Source**: Ninox Documentation
+
+---
+
+## Database Navigation
+
+- `record(table, number)` - Get a record by table and numeric ID; always returns rid (check `._id` for existence)
+
+**Source**: Ninox Documentation
+
+---
+
+## Email
+
+- `sendEmail(options)` - Send an email
+  - Required: `from`, `to`, `subject`, `text`
+  - Optional: `cc`, `bcc`, `replyTo`, `html`, `attachments`
+
+```ninox
+sendEmail({
+    from: "sender@example.com",
+    to: "recipient@example.com",
+    subject: "Subject line",
+    text: "Plain text body",
+    html: "<b>HTML body</b>",
+    attachments: this.Invoice
+})
+```
+
+**Source**: Ninox Documentation
+
+---
+
+## JSON / HTTP Functions
+
+- `http(method, url)` - HTTP request (returns `{result: ..., error: ...}`)
+- `http(method, url, headers)` - With headers
+- `http(method, url, headers, body)` - With body
+- `http(method, url, headers, body, files)` - With file upload
+- `parseJSON(string)` - Parse a JSON string into a Ninox object
+- `formatJSON(object)` - Convert a Ninox object to JSON string
+- `url(baseUrl, params)` - Build URL with query parameters
+- `urlEncode(string)` - URL-encode a string
+- `urlDecode(string)` - URL-decode a string
+
+**Source**: Ninox Documentation
 
 ---
 
@@ -237,4 +380,4 @@ If you find a new documented function:
 
 ---
 
-**Last Updated**: Initial creation based on official documentation
+**Last Updated**: Expanded with UI functions (alert, openRecord), user(), mod operator, type conversion details, and collection utilities.

@@ -60,19 +60,28 @@ This list contains functions, syntax, and patterns that **DO NOT** exist in Nino
 
 - ❌ `find()` - Does not exist (use `select ... where` with `first()`)
 - ❌ `search()` - Does not exist
-- ❌ `filter()` - Does not exist (use `select ... where`)
-- ❌ `sort()` - Does not exist directly (use `select ... order by`)
-- ❌ `unique()` - Does not exist
+- ❌ `filter()` - Does not exist as a standalone function (use `select ... where` or `[]` filter syntax)
 - ❌ `groupBy()` - Does not exist directly
 
-**Correct Alternative**: Use `select` with corresponding clauses
+**Note on functions that DO exist (previously incorrectly listed here)**:
+- ✅ `sort([array])` / `rsort([array])` - **DO EXIST** — sort array ascending/descending. Different from `select ... order by` which sorts database records. These work on arrays/collections.
+- ✅ `unique([array])` - **DOES EXIST** — removes duplicates from a collection.
+
+**Correct Alternative for database sorting**: Use `select ... order by`
 
 ### Regular Expressions
 
-- ❌ Regular expressions like `/pattern/` - Not directly supported
-- ❌ `match()`, `test()` - Do not exist
+- ❌ Regular expressions like `/pattern/` - Not directly supported as regex literals
+- ❌ `match()` - Does not exist (use `testx()` instead)
+- ❌ `test()` as method - Does not exist (use `testx()` function instead)
 
-**Correct Alternative**: Use string functions like `contains()`, `startsWith()`, `endsWith()`
+**Correct Alternative**: Use `testx()`, `replacex()`, `extractx()`, or simple functions like `contains()`, `startsWith()`, `endsWith()`
+
+**Ninox regex functions that DO exist**:
+- ✅ `testx(text, regex)` — Returns boolean if text matches regex pattern
+- ✅ `replacex(text, findRegex, replace)` — Replace using regex
+- ✅ `extractx(text, regex)` — Extract using regex
+- ✅ `splitx(text, regex)` — Split using regex
 
 ### JSON Manipulation
 

@@ -435,6 +435,95 @@ end
 
 ---
 
+## Mistake 17: Date Comparison with Strings
+
+### ❌ WRONG
+```ninox
+"Dates are NOT strings — comparing with string does not work"
+if Deadline < "2024-12-31" then
+    "Error or wrong result!";
+end
+```
+
+### ✅ CORRECT
+```ninox
+"Compare date values with date values"
+if Deadline < date(2024, 12, 31) then
+    "Correct";
+end
+
+"Or compare with today()"
+if Deadline < today() then
+    "Overdue!";
+end
+```
+
+**Reason**: Ninox date fields contain date values, not strings. See `references/datetime-functions.md`.
+
+---
+
+## Mistake 18: Using format() Result for Date Comparison
+
+### ❌ WRONG
+```ninox
+"format() returns TEXT — text comparison is NOT date comparison!"
+let d := format(today(), "YYYY-MM-DD");
+if d < format(Deadline, "YYYY-MM-DD") then
+    "String comparison — wrong!";
+end
+```
+
+### ✅ CORRECT
+```ninox
+"Compare date values directly"
+if today() < Deadline then
+    "Correct date comparison";
+end
+```
+
+**Reason**: `format()` always returns text. Even if it looks like a date, it's a string.
+
+---
+
+## Mistake 19: Using alert() Outside Button Triggers
+
+### ❌ WRONG
+```ninox
+"In an onChange or onSave trigger — alert() does NOT work here!"
+alert("Record saved!");
+```
+
+### ✅ CORRECT
+```ninox
+"alert() only works in button triggers (user-initiated)"
+"In auto-triggers, write to a field instead:"
+this.'Status Message' := "Processed at " + format(now(), "DD.MM.YYYY HH:mm");
+```
+
+**Reason**: `alert()`, `openRecord()`, `popupRecord()` are UI functions only available in button contexts. See `references/triggers.md`.
+
+---
+
+## Mistake 20: Mixing Types Without Conversion in Concatenation
+
+### ❌ WRONG
+```ninox
+"Risky: mixing text and number with +"
+"Value: " + 42
+"Count: " + count(select Orders)
+```
+
+### ✅ CORRECT
+```ninox
+"Always convert explicitly to text"
+"Value: " + text(42)
+"Count: " + text(count(select Orders))
+```
+
+**Reason**: Always use `text()` when concatenating non-text values.
+
+---
+
 ## Checklist for Error Prevention
 
 Before every script check:
@@ -456,6 +545,9 @@ Before every script check:
 - [ ] Use table names instead of relation fields in `select` statements
 - [ ] Use `number(record)` for dynamic selection fields
 - [ ] Check with flag fields against duplicate execution of operations
+- [ ] Never compare dates with strings — use `date()` or `today()`
+- [ ] `alert()` only in button triggers — not in onChange/onSave
+- [ ] Always use `text()` when concatenating numbers/dates into strings
 
 ---
 
