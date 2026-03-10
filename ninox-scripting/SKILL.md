@@ -4,7 +4,7 @@ description: Expert knowledge for scripting in Ninox databases, preventing hallu
 license: CC-BY-4.0. See LICENSE for complete terms.
 metadata:
   author: christianphilie
-  version: "1.2"
+  version: "1.3"
 ---
 
 # Ninox Scripting Skill
@@ -63,7 +63,9 @@ Oder nutze die Anleitung in references/export-guide.md für einen API-Export.
 * [Types](references/types.md) - Type system, conversion, null handling
 * [Database Schema](references/database-schema.md) - Schema structure and field types
 * [Export Guide](references/export-guide.md) - How to export database structure for AI analysis
-* [Globals](references/globals.md) - Global functions: teamId, user functions, sendEmail, execution blocks
+* [Globals](references/globals.md) - Global functions: teamId, user functions, sendEmail, ninoxApp, openPage, execution blocks
+
+* [Changelog](references/changelog.md) - Script-relevant version history and new functions by version
 
 ### Examples
 * [Basic Select](references/example-basic-select.md) - Basic select statements

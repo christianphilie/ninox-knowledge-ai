@@ -232,8 +232,75 @@ Prints a table view.
 
 ---
 
+## Platform Detection
+
+### `ninoxApp()` → text
+Returns a string identifying which platform Ninox is currently running on. Useful for platform-specific UI or logic.
+
+**Return values:**
+| Value | Platform |
+|---|---|
+| `"web"` | Ninox Cloud (browser) |
+| `"mac"` | macOS desktop app |
+| `"iphone"` | iPhone app |
+| `"ipad"` | iPad app |
+| `"android"` | Android phone app |
+| `"tab"` | Android tablet app |
+| `"server"` | Server-side execution |
+
+```ninox
+"Show browser-specific field"
+if ninoxApp() = "web" then
+    "Only visible in browser"
+end
+
+"Adjust output depending on platform"
+switch ninoxApp() do
+    case "web":     "Browser version";
+    case "mac":     "Mac app";
+    case "iphone":  "iPhone";
+    case "ipad":    "iPad";
+    default:        "Other platform";
+end
+```
+
+**Common use**: Add `ninoxApp() = "web"` to the "Display field only, if" condition on a field to show it only in the web app.
+
+**Source**: https://forum.ninox.com/t/g9yzdkd/ninoxapp (official docs redirect)
+
+---
+
+## Navigation Functions (Button/Client Only)
+
+### `openPage(pageName)` → void
+### `openPage(pageName, tabName)` → void
+Closes the current page and opens the specified page. Optionally opens to a specific tab.
+
+**Parameters:**
+- `pageName` — the page name as a text string
+- `tabName` (optional) — the tab to open within the page; defaults to the last active tab
+
+```ninox
+"Open a page by name"
+openPage("Invoices")
+
+"Open a page at a specific tab"
+openPage("Invoices", "Current month")
+```
+
+**Restrictions:**
+- UI function — only works in button (on-click) triggers
+- Does NOT work in onChange, onSave, or formula fields
+- Known limitation: does NOT work in the iPhone app [COMMUNITY REPORT]
+
+**Source**: https://forum.ninox.com/t/h7yzxtg/openpage (official docs redirect)
+
+---
+
 ## Sources
 
 - Official Documentation: https://docs.ninox.com/en/script/globals
 - User Functions: https://docs.ninox.com/en/script/globals (user management section)
+- ninoxApp(): https://forum.ninox.com/t/g9yzdkd/ninoxapp
+- openPage(): https://forum.ninox.com/t/h7yzxtg/openpage
 - Community Forum: https://forum.ninox.de

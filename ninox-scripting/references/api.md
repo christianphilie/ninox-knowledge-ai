@@ -44,7 +44,9 @@ end
 | Ninox Cloud (Public) | `https://api.ninox.com/v1` |
 | Ninox Cloud (Legacy URL) | `https://api.ninoxdb.de/v1` (still functional) |
 | Private Cloud | `https://{yoursubdomain}.ninoxdb.de/v1/` |
-| On-Premises | Check your Ninox admin for URL |
+| On-Premises | Custom domain (e.g., `https://ninox.mycompany.com/v1/`) or IP:Port |
+
+**Note**: Ninox migrated from `ninoxdb.de` to `ninox.com` for the public cloud. The old `api.ninoxdb.de/v1` interface still works but `api.ninox.com/v1` is current. Private Cloud instances use `.ninoxdb.de` subdomains unless a custom domain is configured.
 
 ### Authentication
 
@@ -270,9 +272,122 @@ POST /v1/teams/{teamId}/databases/{databaseId}/query
 ```
 GET /v1/teams/{teamId}/databases/{databaseId}/changes?sinceSq={sequence}
 GET /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/changes?sinceSq={sequence}
+GET /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/changes?sinceSq={sequence}
 ```
 
 Use `sinceSq` to poll for changes since a specific sequence number.
+
+### File Management
+
+```
+GET    /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files
+GET    /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files/{file}
+POST   /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files
+DELETE /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files/{file}
+GET    /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files/{file}/metadata
+GET    /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files/{file}/thumb.jpg
+```
+
+### Delete Multiple Records
+
+```
+DELETE /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records
+```
+
+### Search / Lookup Record
+
+```
+POST /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/record
+```
+
+---
+
+## Private Cloud / On-Premises API
+
+Private Cloud and On-Premises deployments use the same endpoint structure as the Public Cloud, but with a different base URL.
+
+### Private Cloud Base URL
+
+```
+https://{yoursubdomain}.ninoxdb.de/v1/
+```
+
+Or for On-Premises with a custom domain:
+
+```
+https://ninox.yourdomain.com/v1/
+```
+
+### Additional Endpoints (Private Cloud Only)
+
+Private Cloud adds view management endpoints not available in the Public Cloud API:
+
+```
+GET    /v1/teams/{teamId}/databases/{databaseId}/views
+GET    /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/views
+GET    /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/views/{viewId}/share
+POST   /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/views/{viewId}/share
+DELETE /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/views/{viewId}/share
+```
+
+Private Cloud also supports file sharing links:
+
+```
+GET    /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files/{file}/share
+POST   /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files/{file}/share
+DELETE /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records/{recordId}/files/{file}/share
+```
+
+### Authentication — Private Cloud Specifics
+
+```
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+```
+
+Note: On Private Cloud, even requests with an empty body **may require** a body (`{}`) to be sent. This is a quirk noted in the official docs: "A body is required when accessing Ninox data."
+
+### Upsert (Create or Update)
+
+Both Public and Private Cloud support upsert via a special field in the POST body:
+
+```bash
+POST /v1/teams/{teamId}/databases/{databaseId}/tables/{tableId}/records
+
+{
+  "_upsert": ["MatchField"],
+  "fields": {
+    "MatchField": "unique-value",
+    "OtherField": "data"
+  }
+}
+```
+
+This creates a record if no match is found, or updates it if a record with the matching field value exists.
+
+---
+
+## Rate Limits
+
+### Monthly API Call Limits (by Plan)
+
+| Plan | Monthly API Calls |
+|---|---|
+| Starter | 1,500 |
+| Professional | 30,000 |
+| Enterprise | Unlimited |
+
+**Note**: Usage is updated every 5 minutes in the Ninox dashboard. You can monitor consumption under Settings → Integrations → API Usage.
+
+### Per-Minute Limits
+
+[UNVERIFIED] — Ninox does not publish per-minute rate limits in official documentation. Community reports suggest no hard per-second throttling at low volumes, but this is unconfirmed. If you encounter HTTP 429 responses, implement exponential backoff.
+
+### Best Practices to Avoid Rate Limits
+
+- Use the `/exec` endpoint to batch multiple operations in a single API call instead of individual record endpoints
+- Use `select` with `where` filters in exec queries to reduce data transferred
+- Implement caching of infrequently changing data
 
 ---
 
@@ -326,14 +441,17 @@ Use the HTTP Request node with Bearer token authentication.
 
 1. **Authentication**: Always use correct API key — store it securely, never in NX scripts visible to all users
 2. **Error Handling**: HTTP requests can fail — implement conditional checks
-3. **Rate Limits**: Rate limits are [UNVERIFIED] — may depend on your Ninox plan
+3. **Rate Limits**: Monthly limits depend on plan (see Rate Limits section above); per-minute limits are unverified
 4. **API versioning**: Endpoints above are for v1 — verify against your Ninox version
+5. **Private Cloud URL**: Ask your Ninox admin for the exact base URL — it varies per deployment
 
 ---
 
 **Sources**:
 - Official REST API Docs: https://docs.ninox.com/en/api
-- Authentication: https://docs.ninox.com/en/api/authentication
-- Endpoints: https://docs.ninox.com/en/api/endpoints
+- Introduction to Ninox API: https://forum.ninox.com/t/83yzlg7/introduction-to-ninox-api
+- Public Cloud Endpoints: https://forum.ninox.com/t/35yzp89/api-endpoints-for-public-cloud
+- Private Cloud Endpoints: https://forum.ninox.com/t/x2yzfmf/api-endpoints-for-private-cloudon-premises
+- Rate Limits / Capacity: https://forum.ninox.com/t/p8yzfcy/understand-usage-overview-and-capacity-restrictions
 - HTTP Script Docs: `references/http-requests.md`
 - Database Schema: `references/database-schema.md`

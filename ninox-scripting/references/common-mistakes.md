@@ -524,6 +524,129 @@ this.'Status Message' := "Processed at " + format(now(), "DD.MM.YYYY HH:mm");
 
 ---
 
+## Mistake 21: String Sorting with `order by` Gives Wrong Results
+
+### ❌ WRONG (unexpected results with mixed-case text)
+```ninox
+"order by sorts strings by character code, not alphabetically"
+"Uppercase letters come BEFORE lowercase in ASCII"
+let sorted := (select Products) order by Name;
+"'ABcD' becomes sorted as 'ABDc' — unexpected!"
+```
+
+### ✅ CORRECT: Normalize case before sorting
+```ninox
+"Add upper() or lower() for consistent alphabetical sort"
+let sorted := (select Products) order by lower(Name);
+
+"Or use sort() on extracted values (works for text arrays)"
+let names := sort((select Products)[Name]);
+```
+
+**Rule**: `order by` sorts by character code index (uppercase before lowercase). Always normalize case for text sorting. Numeric sorting with `order by` works reliably.
+
+---
+
+## Mistake 22: Setting a Relation Field to null Causes Error
+
+### ❌ WRONG
+```ninox
+"Setting a reference field to null causes 'Expression must return a number or record id: null'"
+this.Customer := null;
+```
+
+### ✅ CORRECT
+```ninox
+"Use 0 to clear a reference field"
+this.Customer := 0;
+
+"Or use an empty collection"
+this.Customer := [];
+```
+
+**Reason**: Reference fields expect a record ID (number) or a collection — not `null`. Use `0` or an empty collection to clear a relation field.
+
+---
+
+## Mistake 23: Forgetting to Check `record()` Exists Before Accessing Fields
+
+### ❌ WRONG
+```ninox
+"record() always returns an rid object — even if ID doesn't exist"
+let r := record(Orders, someId);
+r.Status := "Done";
+"If record doesn't exist, this silently fails or errors"
+```
+
+### ✅ CORRECT
+```ninox
+let r := record(Orders, someId);
+if r._id != null then
+    r.Status := "Done";
+else
+    alert("Record not found: " + text(someId));
+end
+```
+
+**Reason**: `record(table, id)` always returns an rid (record identifier), even for non-existent IDs. Always check `._id != null` before accessing fields.
+
+---
+
+## Mistake 24: Using `http()` Inside a `do as transaction` Block
+
+### ❌ WRONG
+```ninox
+do as transaction
+    "http() inside a transaction — causes errors"
+    let response := http("POST", "https://api.example.com/", {}, {});
+    this.Result := response.result;
+end
+```
+
+### ✅ CORRECT
+```ninox
+"http() must be outside the transaction, or in do as server"
+let response := do as server
+    http("POST", "https://api.example.com/", {}, {})
+end;
+do as transaction
+    this.Result := response.result;
+    this.Status := "Done";
+end
+```
+
+**Reason**: `http()` is an I/O operation and cannot run inside `do as transaction`. Perform HTTP requests before/outside the transaction, then use the results within.
+
+---
+
+## Mistake 25: Calling `dialog()` or `alert()` from Server-Side Code
+
+### ❌ WRONG
+```ninox
+"dialog() and alert() in 'do as server' block — does NOT work"
+do as server
+    alert("Done!");
+    let answer := dialog("Confirm", "Are you sure?", ["Yes", "No"]);
+end
+```
+
+### ✅ CORRECT
+```ninox
+"UI functions must be outside do as server"
+let answer := dialog("Confirm", "Are you sure?", ["Yes", "No"]);
+if answer = "Yes" then
+    let result := do as server
+        "server-side work here"
+        http("POST", url, headers, body)
+    end;
+    alert("Done: " + result.result);
+end
+```
+
+**Reason**: `do as server` runs code on the server with no UI access. `alert()`, `dialog()`, `openRecord()`, and `openPage()` are client-only UI functions. Call them outside server blocks.
+
+---
+
 ## Checklist for Error Prevention
 
 Before every script check:
@@ -548,6 +671,11 @@ Before every script check:
 - [ ] Never compare dates with strings — use `date()` or `today()`
 - [ ] `alert()` only in button triggers — not in onChange/onSave
 - [ ] Always use `text()` when concatenating numbers/dates into strings
+- [ ] For text sorting: normalize with `lower()` or `upper()` before `order by`
+- [ ] To clear a relation/reference field: use `0` or `[]`, NOT `null`
+- [ ] After `record(table, id)`: always check `._id != null` before accessing
+- [ ] Never use `http()` inside `do as transaction`
+- [ ] Never use `dialog()` / `alert()` inside `do as server`
 
 ---
 

@@ -103,9 +103,72 @@ This list contains all **documented** Ninox functions that can be safely used. T
 - `raw(value)` - Returns raw internal text representation
 - `chosen(value, selection)` - Returns boolean if value equals selection
 
+**`lpad()` and `rpad()` examples:**
+```ninox
+"Left-pad invoice number with zeros to 6 digits"
+lpad(text(number(this)), 6, "0")
+"→ '000042' for record 42"
+
+"Right-pad a code to fixed length with dashes"
+rpad(Code, 8, "-")
+"→ 'ABC-----' for Code = 'ABC'"
+
+"Combined: extract and pad"
+rpad(substr(LastName, 0, 4), 4, "-") + substr(SSN, 5)
+```
+
+**`capitalize()` example:**
+```ninox
+"Capitalize each word in a name"
+capitalize("frank böhmer")
+"→ 'Frank Böhmer'"
+
+"Use on input to normalize user-entered names"
+this.Name := capitalize(this.Name);
+```
+
+**`testx()` example (regex match):**
+```ninox
+"Test if text matches a regex pattern"
+testx("hello@example.com", "^[^@]+@[^@]+\.[^@]+$")
+"→ true (looks like an email)"
+
+testx("not-an-email", "^[^@]+@[^@]+\.[^@]+$")
+"→ false"
+
+"Case-insensitive match"
+testx("Hello World", "hello", "i")
+"→ true"
+```
+
+**`replacex()` example (regex replace):**
+```ninox
+"Remove all non-digit characters from phone number"
+replacex(PhoneNumber, "\D", "", "g")
+"→ '004915112345678' from '+49 (151) 123-45678'"
+
+"Replace all whitespace sequences with single space"
+replacex(text, "\s+", " ", "g")
+```
+
+**`splitx()` example (regex split):**
+```ninox
+"Split on one or more whitespace characters"
+splitx("word1   word2\tword3", "\s+")
+"→ ['word1', 'word2', 'word3']"
+
+"Split on comma or semicolon"
+splitx("a,b;c,d", "[,;]")
+"→ ['a', 'b', 'c', 'd']"
+```
+
 **String concatenation**: The `+` operator concatenates strings. Always use `text()` to convert non-strings: `"Name: " + text(42)`
 
 **Source**: Ninox Documentation - Functions, https://docs.ninox.com/en/script/text-functions
+- testx: https://forum.ninox.com/t/60yznqv/testx
+- replacex: https://forum.ninox.com/t/35yzw8a/replacex
+- lpad: https://forum.ninox.com/t/x2yzbj2/lpad
+- capitalize: https://forum.ninox.com/t/p8yzg6k/capitalize
 
 ---
 
@@ -231,12 +294,69 @@ This list contains all **documented** Ninox functions that can be safely used. T
 - `sort(collection)` - Sort collection ascending ✅ confirmed documented
 - `rsort(collection)` - Sort collection descending ✅ confirmed documented
 - `range(start, end)` - Create numeric array [start, start+1, ..., end-1] (same as `for i from start to end`)
-- `slice(collection, start)` - Extract subrange from array or string
-- `slice(collection, start, end)` - Extract subrange with end position
+- `slice(collection, start)` - Extract subrange from array or string (0-indexed, inclusive start)
+- `slice(collection, start, end)` - Extract subrange with end position (exclusive end)
 - `numbers(choiceField)` - Returns IDs of selected values in a multiple choice field
 - `files(record)` - Returns all file attachments of a record as array
 
+**`range()` example:**
+```ninox
+"Create sequence 1 through 5"
+for i in range(1, 6) do
+    "Process i = 1, 2, 3, 4, 5";
+end
+```
+
+**`slice()` example:**
+```ninox
+"Extract elements 1 and 2 from array (0-indexed, exclusive end)"
+slice(["Apple","Bagel","Cake","Donut"], 1, 3)
+"→ Bagel, Cake"
+
+"Extract characters from text"
+slice("Mermaid", 3, 7)
+"→ maid"
+
+"Get last 3 records from a sorted selection"
+let allOrders := select Orders order by Date desc;
+let recent := slice(allOrders, 0, 3);
+```
+
+**`numbers()` example:**
+```ninox
+"Get IDs of selected choices in a multiple choice field"
+let selectedIds := numbers('Favorite sports');
+"→ e.g. [1, 3, 4] for Basketball, Dancing, Sailing"
+
+"Iterate over selected dynamic choice records"
+for id in numbers('Selected Products') do
+    let product := record(Products, id);
+    "Process product";
+end
+```
+
+**`files()` example:**
+```ninox
+"Count files attached to current record"
+count(files(this))
+
+"Send all attachments via email"
+sendEmail({
+    from: "sender@example.com",
+    to: "recipient@example.com",
+    subject: "Documents",
+    text: "Please find the documents attached.",
+    attachments: files(this)
+})
+
+"Get files from a related record"
+let docs := files(this.Customer);
+```
+
 **Source**: Ninox Documentation, forum.ninox.com
+- numbers(): https://forum.ninox.com/t/q6yz3dl/numbers
+- files(): https://forum.ninox.com/t/y4yzrb5
+- slice(): https://forum.ninox.com/t/p8yzwmy
 
 ---
 
@@ -249,11 +369,51 @@ These functions are only available in button/click trigger contexts. They do NOT
 - `openRecord(record)` - Navigate to and open a specific record
 - `openTable(tableName)` - Navigate to a table
 - `openTable(tableName, viewName)` - Navigate to a specific view of a table
+- `openPage(pageName)` - Close current page and open the named page
+- `openPage(pageName, tabName)` - Open page at a specific tab
 - `openURL(url)` - Open a URL in browser
 - `popupRecord(record)` - Open a record in a popup window
 - `popupRecord(record, tabName)` - Open record popup at specific tab
 - `printRecord(record)` - Print a record
 - `printTable(tableName)` - Print a table
+
+**`dialog()` example:**
+```ninox
+"Button trigger only"
+let answer := dialog(
+    "Delete record",
+    "Are you sure you want to delete this record? This cannot be undone.",
+    ["Yes, delete it", "No, keep it"]
+);
+if answer = "Yes, delete it" then
+    delete this
+end
+```
+
+**`openPage()` example:**
+```ninox
+"Button trigger only"
+openPage("Dashboard")
+openPage("Invoices", "Current month")
+```
+
+## Platform Detection
+
+- `ninoxApp()` - Returns current platform as text: `"web"`, `"mac"`, `"iphone"`, `"ipad"`, `"android"`, `"tab"`, `"server"`
+
+**`ninoxApp()` example:**
+```ninox
+"Adjust display based on platform"
+if ninoxApp() = "web" then
+    "Show web-only content"
+end
+
+"Platform-specific greeting"
+let platform := ninoxApp();
+if platform = "iphone" or platform = "ipad" then
+    alert("Use landscape mode for best experience")
+end
+```
 
 **Source**: Ninox Documentation
 
@@ -290,6 +450,28 @@ These functions are only available in button/click trigger contexts. They do NOT
 - `tableId(string)` - Returns table ID by table name
 - `fieldId(field)` - Returns field ID (e.g., "A", "B")
 
+**`teamId()` / `databaseId()` example:**
+```ninox
+"Build Ninox REST API URL for the current database"
+let baseUrl := "https://api.ninox.com/v1/teams/" + teamId() + "/databases/" + databaseId();
+let response := do as server
+    http("GET", baseUrl + "/tables", {"Authorization": "Bearer " + ApiKey})
+end;
+```
+
+**`clientLang()` example (also relevant to User Functions section):**
+```ninox
+"Show message in user's language"
+let msg := if clientLang() = "de" then
+    "Datensatz gespeichert"
+else if clientLang() = "fr" then
+    "Enregistrement sauvegardé"
+else
+    "Record saved"
+end;
+alert(msg)
+```
+
 **Source**: Ninox Documentation
 
 ---
@@ -298,7 +480,26 @@ These functions are only available in button/click trigger contexts. They do NOT
 
 - `record(table, number)` - Get a record by table and numeric ID; always returns rid (check `._id` for existence)
 
-**Source**: Ninox Documentation
+**`record()` example:**
+```ninox
+"Get a specific record by table name and numeric ID"
+let customer := record(Customers, 42);
+customer.Name
+"→ the Name field of customer record 42"
+
+"Check if a record exists before accessing it"
+let r := record(Orders, someId);
+if r._id != null then
+    "Record exists"
+    r.Status := "Processed";
+end
+
+"Use record ID from a field or variable"
+let orderId := number(this.Order);
+let order := record(Orders, orderId);
+```
+
+**Source**: Ninox Documentation, https://forum.ninox.com/t/y4yzd5c/record
 
 ---
 
@@ -331,11 +532,69 @@ sendEmail({
 - `http(method, url, headers, body, files)` - With file upload
 - `parseJSON(string)` - Parse a JSON string into a Ninox object
 - `formatJSON(object)` - Convert a Ninox object to JSON string
-- `url(baseUrl, params)` - Build URL with query parameters
+- `url(baseUrl, params)` - Build URL with query parameters (returns a clickable link type)
 - `urlEncode(string)` - URL-encode a string
 - `urlDecode(string)` - URL-decode a string
 
+**`parseJSON()` example:**
+```ninox
+"Parse a JSON response from http()"
+let response := do as server
+    http("GET", "https://api.example.com/data", {"Authorization": "Bearer TOKEN"})
+end;
+if not response.error then
+    let data := parseJSON(response.result);
+    let name := item(data, "name");
+    "Use data.field or item(data, 'key')"
+end
+
+"Parse inline JSON (use double-double-quotes for embedded quotes)"
+let obj := parseJSON("{""key"": ""value"", ""count"": 42}");
+item(obj, "count")
+"→ 42"
+```
+
+**`formatJSON()` example:**
+```ninox
+"Convert object to JSON string for API body"
+let body := {
+    name: this.Name,
+    email: this.Email,
+    active: true
+};
+let json := formatJSON(body);
+"→ '{"name":"Acme","email":"info@acme.com","active":true}'"
+
+"Log an API response for debugging"
+this.DebugLog := formatJSON(response.result);
+```
+
+**`url()` example:**
+```ninox
+"Create a clickable link (use in formula field)"
+url("https://ninox.com")
+
+"Build URL with query parameters (automatically URL-encoded)"
+url("https://maps.example.com/search", {q: this.Address, zoom: 14})
+"→ clickable link: https://maps.example.com/search?q=Main%20Street&zoom=14"
+```
+
+**`urlEncode()` / `urlDecode()` example:**
+```ninox
+"Encode a search term for a URL"
+"https://example.com/search?q=" + urlEncode(this.SearchTerm)
+"→ 'https://example.com/search?q=Frank%20B%C3%B6hmer'"
+
+"Decode an encoded URL parameter"
+urlDecode("Frank%20B%C3%B6hmer")
+"→ 'Frank Böhmer'"
+```
+
 **Source**: Ninox Documentation
+- parseJSON: https://forum.ninox.com/t/p8yzd16
+- formatJSON: https://forum.ninox.com/t/p8yzrb4/formatjson
+- urlEncode: https://forum.ninox.com/t/q6yz7xc/urlencode
+- url(): https://forum.ninox.com/t/m1yz7x7/url
 
 ---
 
